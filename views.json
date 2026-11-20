@@ -6,11 +6,11 @@
     "sections": [
       {
         "title": "Review queue",
-        "sql": "select * from v_review_queue order by code"
+        "sql": "select code,title,owner,version,review_due,claims_declaration from v_review_queue order by code"
       },
       {
         "title": "Terms needing a decision",
-        "sql": "select * from v_term_review order by code"
+        "sql": "select code,term,status,owner,review_due,reason from v_term_review order by code"
       },
       {
         "title": "Evidence checks",

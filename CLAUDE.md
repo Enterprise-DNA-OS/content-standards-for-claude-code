@@ -1,43 +1,53 @@
-# Content Standards for Claude Code: operating instructions
+# Content Standards for Claude Code
 
-This file is the brain. Claude Code reads it at the start of every session. It says who this is for, how work gets done, and the one right way to do each recurring job.
+An operator-managed desk for terminology, literal phrase rules, content revisions and review evidence. All demo records are synthetic. Set brand.json to the business name before producing real review packets.
 
-## Who this is for
+## Rules
 
-- **Business:** [YOUR BUSINESS]
-- **Operator:** [YOUR NAME], [your role]
-- **What matters most:** [the one or two outcomes you care about]
+Read the current document before changing it. Use scripts/standards.mjs for every business change. Never invent evidence, a review decision or a claim declaration. Draft only. Never send, publish, crawl a website or alter customer content outside this database. Actor strings are labels, not verified identities. Use this base with trusted operators only.
 
-Fill this in once. A worker with context knows. A worker without it guesses.
+A check is literal phrase matching, not grammar, fact verification, semantic analysis or legal certification. The human reviewer checks context, omissions, evidence and legal applicability. Approval is tied to the revision and a standards snapshot. Use release-check for current readiness, never the historical approval count.
 
-## How to work
+## Routing
 
-1. **Take a brief, not a script.** The operator describes the outcome. You run the right command and present the answer.
-2. **Read before you write.** Before drafting anything about a record, read its full history first.
-3. **Plain language.** Short sentences. No filler. Numbers in tables.
-4. **Silent success, loud problems.** No play-by-play. Say what broke and what you did about it.
-5. **Stop at the line.** Anything that sends, deletes, or faces a customer waits for a yes in this session.
+- /help: npm run standards -- help. See .claude/commands/help.md.
+- /terms: npm run standards -- terms. See .claude/commands/terms.md.
+- /rules: npm run standards -- rules. See .claude/commands/rules.md.
+- /documents: npm run standards -- documents. See .claude/commands/documents.md.
+- /term-review: npm run standards -- term-review. See .claude/commands/term-review.md.
+- /review-queue: npm run standards -- review-queue. See .claude/commands/review-queue.md.
+- /compliance: npm run standards -- compliance. See .claude/commands/compliance.md.
+- /owner-workload: npm run standards -- owner-workload. See .claude/commands/owner-workload.md.
+- /imports: npm run standards -- imports. See .claude/commands/imports.md.
+- /audit: npm run standards -- audit. See .claude/commands/audit.md.
+- /attention: npm run standards -- attention. See .claude/commands/attention.md.
+- /weekly-review: npm run standards -- weekly-review. See .claude/commands/weekly-review.md.
+- /detail: npm run standards -- detail "<code or title>". See .claude/commands/detail.md.
+- /history: npm run standards -- history "<code or title>". See .claude/commands/history.md.
+- /release-check: npm run standards -- release-check "<code or title>". See .claude/commands/release-check.md.
+- /add-term: npm run standards -- add-term --code=TERM-NEW --term="<phrase>" --status=proposed --owner="<owner>" --review-due=YYYY-MM-DD --actor="<operator>". See .claude/commands/add-term.md.
+- /review-term: npm run standards -- review-term "<term code>" --status=preferred --review-due=YYYY-MM-DD --actor="<reviewer>". See .claude/commands/review-term.md.
+- /add-rule: npm run standards -- add-rule --code=RULE-NEW --phrase="<literal phrase>" --kind=required --reason="<house policy>" --actor="<operator>". See .claude/commands/add-rule.md.
+- /retire-rule: npm run standards -- retire-rule "<rule code>" --note="<reason>" --actor="<operator>". See .claude/commands/retire-rule.md.
+- /add: npm run standards -- add --code=DOC-NEW --title="<title>" --owner="<owner>" --review-due=YYYY-MM-DD --file="<text file>" --claims=unreviewed --actor="<author>". See .claude/commands/add.md.
+- /revise: npm run standards -- revise "<document>" --file="<text file>" --claims=unreviewed --actor="<author>". See .claude/commands/revise.md.
+- /set-review-date: npm run standards -- set-review-date "<document>" --review-due=YYYY-MM-DD --note="<review reason>" --actor="<reviewer>". See .claude/commands/set-review-date.md.
+- /record-claim: npm run standards -- record-claim "<document>" --statement="<exact text>" --evidence="<evidence reference and assessment>" --valid-until=YYYY-MM-DD --actor="<reviewer>". See .claude/commands/record-claim.md.
+- /check-content: npm run standards -- check-content "<document>" --actor="<operator>". See .claude/commands/check-content.md.
+- /approve: npm run standards -- approve "<document>" --note="<review scope and evidence decision>" --actor="<reviewer>". See .claude/commands/approve.md.
+- /log: npm run standards -- log "<document>" --note="<actual observation>" --actor="<operator>". See .claude/commands/log.md.
+- /draft-review: npm run standards -- draft-review "<document>". See .claude/commands/draft-review.md.
+- /import: npm run standards -- import acrolinx --file="<export.csv>" --map=fixtures/acrolinx-map.json --source="<tenant-export>" --exported-at=2026-11-20T00:00:00Z --owner="<owner>" --review-due=YYYY-MM-DD --actor="<operator>" --dry-run. See .claude/commands/import.md.
+- /export: npm run standards -- export --file="<new private backup.json>". See .claude/commands/export.md.
+- /view: npm run view. Read-only weekly report.
+- /docs: npm run docs. Versioned review evidence packet.
+- /customise: write and test a migration, update the CLI, imports, tests and reports, then apply to the authorised database.
+- /new-view: add a read-only query and branded report.
 
-## Routing table: one right way for each recurring job
+## Data
 
-| When the operator asks for... | Use this |
-|---|---|
-| <!-- TODO(author): one row per slash command --> | `/...` |
+Read docs/operations.md before real use and docs/replace-markup-ai.md before importing. DATABASE_URL selects PostgreSQL, otherwise PGlite lives in .data/db. DATA_DIR changes local storage, OUTPUT_DIR changes generated report paths. Keep real content, exports and drafts private. Never seed an operating database.
 
-If an ask fits nothing here, run the CLI directly (`npm run <cli> -- --help`) and then propose a new command for it.
+The .claude commands are the one command library for Claude Code, Codex, OpenCode and Cursor. AGENTS.md routes here. Read docs/compliance.md before interpreting evidence checks.
 
-## Hard rules
-
-- Never send email or messages from here. Draft to `drafts/`, a person sends.
-- Never delete records without an explicit yes in this session. Prefer marking closed or archived.
-- Never invent a record. If a name is ambiguous, list the candidates and ask.
-- The database is the source of truth. If the answer is not in it, say so.
-
-## Where things live
-
-- `scripts/` the CLI. `scripts/lib/db.mjs` picks `DATABASE_URL` (Postgres, Supabase) or the embedded database in `.data/`.
-- `supabase/migrations/` the schema, plain SQL. `npm run migrate` applies it.
-- `.claude/commands/` the slash commands. Add one every time the same ask comes twice.
-- `docs/` the thesis and the guide for moving off Markup AI.
-
-Built by Enterprise DNA. Installed and run for you as part of Omni: https://enterprisedna.co/omni/instead-of/markup-ai
+Built and run through Omni by Enterprise DNA. https://enterprisedna.co/omni/book?offer=replace-software&utm_campaign=markup-ai&utm_medium=instructions

@@ -1,0 +1,13 @@
+{
+  "id": "Term UUID",
+  "term": "Term name",
+  "language": "Language",
+  "domain": "Domain",
+  "status": "Status",
+  "replacement": "Replacement",
+  "status_values": {
+    "preferred": "preferred",
+    "deprecated": "deprecated",
+    "proposed": "proposed"
+  }
+}

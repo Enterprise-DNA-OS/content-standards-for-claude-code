@@ -1,13 +1,24 @@
 [
   {
-    "name": "week",
-    "title": "This week",
-    "subtitle": "Content Standards for Claude Code: what needs attention, rendered by npm run view",
+    "name": "content-week",
+    "title": "Content standards weekly review",
+    "subtitle": "Local records and review evidence, not a legal verdict",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Review queue",
+        "sql": "select * from v_review_queue order by code"
+      },
+      {
+        "title": "Terms needing a decision",
+        "sql": "select * from v_term_review order by code"
+      },
+      {
+        "title": "Evidence checks",
+        "sql": "select code,rule,finding from v_compliance order by code"
+      },
+      {
+        "title": "Owner workload",
+        "sql": "select * from v_owner_workload order by owner"
       }
     ]
   }

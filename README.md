@@ -1,115 +1,112 @@
-<h1 align="center">Content Standards for Claude Code</h1>
+# Content Standards for Claude Code
 
-<p align="center">
-  <strong>The open-source content standards desk that is just a database and Claude Code.</strong>
-</p>
+Your product wording changes. The evidence and sign-off should follow the exact revision. Keep terminology, phrase rules, content versions and review decisions in a database you own.
 
-<p align="center">
-  Created by <a href="https://www.enterprisedna.co"><strong>Enterprise DNA</strong></a>. Free and open source. Works with Claude Code, Codex, OpenCode or Cursor.
-</p>
+## Three ways to use it
 
-<!-- three-doors -->
-<table align="center">
-  <tr>
-    <td align="center"><strong>Do it yourself</strong><br/>Clone it, run it, own it. Free, MIT.<br/><a href="#quick-start">Quick start</a></td>
-    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your Markup AI data brought across.<br/><a href="https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=markup-ai">Book a call</a></td>
-    <td align="center"><strong>We run it for you</strong><br/>Installed, connected and operated inside Omni. Setup fee, then a retainer.<br/><a href="https://enterprisedna.co/omni/instead-of/markup-ai?utm_source=github&utm_medium=readme&utm_campaign=markup-ai">How it works</a></td>
-  </tr>
-</table>
-
-<p align="center">
-  <a href="#what-is-this">What is this</a> &bull;
-  <a href="#why-no-front-end">Why no front end</a> &bull;
-  <a href="#quick-start">Quick start</a> &bull;
-  <a href="#the-commands">Commands</a> &bull;
-  <a href="#instead-of-markup-ai">Instead of Markup AI</a> &bull;
-  <a href="#want-it-installed-and-run-for-you">Installed for you</a> &bull;
-  <a href="#license">License</a>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Node-20+-339933?style=flat-square" alt="Node 20+" />
-  <img src="https://img.shields.io/badge/PostgreSQL-any-336791?style=flat-square" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/PGlite-embedded-3ecf8e?style=flat-square" alt="PGlite" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License" />
-</p>
-
----
-
-## What is this
-
-Content Standards for Claude Code does the job you pay Markup AI for, as a Postgres database and a set of agent commands. There is no web front end. You open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor: see `AGENTS.md`) and ask for what you want in plain language. It runs the right query, and it can answer questions the Markup AI dashboard cannot.
-
-<!-- TODO(author): the annual bill. One sentence: what a 10 to 50 person business typically pays Markup AI per year, all in, with a source. -->
-
-Want the same thing with a web front end, or built on a different stack? That is a customisation, and it is exactly what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=markup-ai).
-
-<!-- TODO(author): two or three sentences on what this specific product covers and who it is for. -->
-
-## Why no front end
-
-- The front end was only ever there because the database was hard to talk to. That is no longer true.
-- Your data sits in plain Postgres tables you own. Any tool can read them. No export, no lock-in.
-- No seats, no tiers, no add-ons. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for the honest trade-offs too.
+- **Do it yourself:** free MIT source. Run the demo and operate your own review desk with Claude Code, Codex, OpenCode or Cursor.
+- **We customise it:** Enterprise DNA brings your terminology across and builds your fields, review rules, editor connections and screens. Setup fee, then a retainer.
+- **We run it for you:** installed, connected and operated through **Omni by Enterprise DNA**. Setup fee, then a retainer. [Talk to Sam](https://enterprisedna.co/omni/book?offer=replace-software&utm_campaign=markup-ai&utm_medium=readme).
 
 ## Quick start
 
-Sixty seconds, no database install (an embedded Postgres runs inside Node):
+Node 20 or newer. Windows and Linux. Embedded PGlite needs no server. DATABASE_URL selects PostgreSQL.
 
 ```bash
-git clone https://github.com/Enterprise-DNA-OS/content-standards-for-claude-code.git
-cd content-standards-for-claude-code
 npm install
 npm run demo
+npm run standards -- attention
+npm run standards -- check-content DOC-001 --actor="Demo operator"
+npm run standards -- weekly-review
+npm run view
+npm run docs
+npm test
 ```
 
-Then open the folder in Claude Code and type a slash command. <!-- TODO(author): name the first command to try. -->
+Use a fresh demo database. Synthetic content includes overdue terminology, missing declarations and expired evidence. Required wording and review dates are house policies, not statutory rules.
 
-### Use it with your own Postgres or Supabase
+## The content week
 
-Copy `.env.example` to `.env`, set `DATABASE_URL`, then `npm run migrate`. Same commands, shared data, no per-seat fee.
+/term-review settles proposed and stale wording. /review-queue assigns document reviews. /check-content stores literal findings with the exact standards snapshot. /compliance finds recorded evidence gaps. /release-check identifies changed content, changed standards and expired review dates. /weekly-review combines these into the next work list.
 
-## The commands
+Every term has a language and domain. General terms apply alongside the document domain. Language tags must match exactly. Checks use Unicode whole-phrase boundaries and ignore case. They do not infer synonyms, plurals, grammar or truth. Proposed terms appear in term-review and are not prohibited automatically.
 
-<!-- TODO(author): a table of the slash commands in .claude/commands and what each one does. -->
+## Bring your terminology
 
-| Command | What it does |
-|---|---|
-| `/...` | ... |
-
-## Instead of Markup AI
-
-<!-- TODO(author): how to bring data across from Markup AI; link docs/replace-markup-ai.md -->
-
-## Architecture
-
-```
-content-standards-for-claude-code/
-  CLAUDE.md                 how the operator wants this run (routing table + house rules)
-  AGENTS.md                 the same, for Codex / OpenCode / Cursor / Gemini CLI
-  .claude/commands/         the slash commands
-  scripts/                  the CLI the commands drive
-  scripts/lib/db.mjs        one adapter: DATABASE_URL (pg) or embedded PGlite
-  supabase/migrations/      plain SQL schema
-  supabase/seed.sql         demo data
-  docs/                     the thesis and the migration guide
+```bash
+npm run standards -- import acrolinx --file=fixtures/acrolinx.csv --map=fixtures/acrolinx-map.json --source=demo-export --exported-at=2026-11-20T00:00:00Z --owner="Demo editor" --review-due=2027-01-01 --actor="Demo operator" --dry-run
 ```
 
-## Built for coding agents
+The import supports the documented legacy Acrolinx terminology CSV path. Markup AI is the current brand. A native Markup Business export is not assumed to have the same format. Inspect your export and map the columns first. The sample is synthetic, not a captured vendor export. Repeat without --dry-run once reconciled. [Switch guide](docs/replace-markup-ai.md).
 
-The database, CLI and command recipes work with Claude Code, Codex, OpenCode or Cursor. Ask your coding agent for a new command and have it implement and test the change against the same records.
+## Ten questions answered by your own records
 
-## Contributing
+1. Which documents still need a release decision? attention.
+2. Which terms are awaiting an owner’s decision? term-review.
+3. Which content revisions have no claim declaration? compliance.
+4. Which claims have expired evidence? compliance.
+5. Which owner has the most overdue documents? owner-workload.
+6. Which documents were checked against older standards? release-check.
+7. What wording was in the exact approved revision? history and detail.
+8. Which phrases break our own current rules? check-content.
+9. What did our terminology export originally contain? export.
+10. Which documents changed after their last approval? release-check and history.
 
-Issues and pull requests are welcome. Keep the shape: plain SQL, a small CLI, a slash command per recurring job, no front end.
+These are working queries, not a claim that the vendor cannot answer them. The difference is that you can combine your own evidence and change the rules without buying a reporting tier.
 
-## Want it installed and run for you?
+## Commands
 
-Enterprise DNA installs Content Standards for Claude Code for your business, migrates your Markup AI data, connects it to the rest of your tools, and runs it for you as part of **Omni**, our managed Command Center. One setup fee, then a monthly retainer.
+- /help: List the available operations.
+- /terms: Read the terminology register, status, replacement and review date.
+- /rules: Read active and retired phrase rules.
+- /documents: Read current content revisions and review ownership.
+- /term-review: Decide proposed terms and overdue terminology reviews. Use review-term for an authorised decision.
+- /review-queue: Prepare the content review queue in due-date order. Approval counts are historical, not current readiness.
+- /compliance: Show recorded claim-evidence and review-date gaps. Read docs/compliance.md. A clear result is not a legal conclusion.
+- /owner-workload: See each owner’s overdue documents and undeclared claims.
+- /imports: Review source export dates and import counts.
+- /audit: Read the local actor labels and recorded changes. Actor labels are not authenticated identities.
+- /attention: Show documents blocked by content findings, stale checks, missing evidence or missing approval.
+- /weekly-review: Combine attention, term-review, compliance and owner-workload. Name the owner and next action for each blocker.
+- /detail: Read the exact current text and its claims before taking action.
+- /history: Read all revisions, events and historical approvals.
+- /release-check: Check current readiness. This records no publication and sends nothing.
+- /add-term: Add a term. Optional --language=en --domain=general --replacement="<preferred wording>". Use the actual language tag consistently.
+- /review-term: Read the term first. Status is preferred, deprecated or proposed. Optional --replacement and --owner. Local review prevents conflicting source updates.
+- /add-rule: Kind is required or prohibited. Optional --domain and --language. Rules match literal whole phrases, not meaning. New standards invalidate old checks.
+- /retire-rule: Retire an obsolete house rule without deleting it.
+- /add: Add plain text or Markdown. Optional --domain and --language. Claims declaration is unreviewed, none or listed. Never guess that a document has no claims.
+- /revise: Append a revision. Evidence and approvals remain with the old revision. Review and record evidence for the new version.
+- /set-review-date: Record a completed scheduling review. Never change the date just to hide an overdue item.
+- /record-claim: Requires a current revision declaring listed claims. The statement must appear in that text. Record actual evidence and assessment, not an invented reference. To replace wrong or expired evidence, append a revised document and record the new evidence.
+- /check-content: Store findings and the exact standards snapshot. Checking does not approve. Fix text with revise, or review standards through their own commands.
+- /approve: Read detail, compliance and release-check first. Reviewer label must differ from author. A current clean check, claim declaration, current evidence and review dates are required. The reviewer must assess omitted claims and legal applicability. Nothing is published.
+- /log: Append an operating note without changing the content.
+- /draft-review: Write a review brief under drafts. Read it and report the path. Never send it.
+- /import: Read docs/replace-markup-ai.md. This accepts documented legacy Acrolinx terminology CSV, not an assumed native Markup export. Inspect headers and set the mapping and status_values. Preview, reconcile, then repeat without --dry-run under the operator’s import request.
+- /export: Export all domain records, raw imports, revisions and evidence. Existing files are never overwritten. Contains private content. JSON archive, not a direct vendor restore or database backup.
 
-- Book a call: [enterprisedna.co/omni/book](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=markup-ai)
-- Read more: [enterprisedna.co/omni/instead-of/markup-ai](https://enterprisedna.co/omni/instead-of/markup-ai?utm_source=github&utm_medium=readme&utm_campaign=markup-ai)
+All commands support --json. Writes require --actor. Names are case-insensitive, unique partial names and id prefixes work, and ambiguous selections list candidates with exit 1. See the matching .claude/commands recipe for exact arguments. /customise and /new-view extend the same database.
 
-## License
+## Documents and views
 
-MIT. Copyright (c) 2026 Enterprise DNA.
+Set business name, colours and logo in brand.json. npm run docs creates one content review packet per document: current wording, evidence gaps, claims, checks and historical approvals. npm run view creates the weekly read-only dashboard. Nothing publishes or sends. Use release-check for live readiness: reports are snapshots.
+
+## Your first hour: ten things to ask for
+
+1. Put our name on the review packet.
+2. Show the content that needs a decision.
+3. Explain the terms awaiting review.
+4. Show the oldest owner backlog.
+5. Check the summer product wording.
+6. Explain why a previous approval is stale.
+7. Preview our terminology export.
+8. Draft a note for the content reviewer.
+9. Add our product range with /customise.
+10. Add a weekly regional view with /new-view.
+
+## Operating scope
+
+The free base is a trusted-operator content standards desk. It checks literal phrases and records human substantiation decisions. It does not recreate Markup AI’s language models, grammar engine, editor integrations, crawling, citability scoring, identity management or hosted publishing controls. Enterprise DNA can scope the connections and interface your team needs. [Why no front end](docs/why-no-front-end.md).
+
+[Evidence rules](docs/compliance.md), [operations](docs/operations.md), [research](docs/research.md), [verification](docs/verification.md). MIT. Not affiliated with Markup AI, Acrolinx or Anthropic. Hosting, agent access and operation remain your costs.

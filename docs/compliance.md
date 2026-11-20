@@ -6,7 +6,7 @@ Sources opened 2026-11-20. This is a record-review aid. It does not assess legal
 - **CLAIM-EVIDENCE:** listed claims need at least one evidence record; every recorded claim needs a reference, reviewer and unexpired review date. Approval refuses missing or expired records. It cannot detect claims a person omitted or prove a reference is valid.
 - **DECLARATION-CONFLICT:** a no-claims declaration cannot have recorded claims.
 - **REVIEW-DUE:** overdue content and terminology dates block approval. These dates are configured business review intervals, not statutory deadlines.
-- **VERSION-CHECK:** approval requires a check against the exact content revision and current terminology/rules. A later revision or changed standards needs another check. Current date-sensitive findings are recalculated.
+- **VERSION-CHECK:** approval requires a check against the exact content revision and current terminology/rules. A later revision or changed standards needs another check. Added claim evidence invalidates the approval and requires a fresh decision. Each approval stores the evidence snapshot. Current date-sensitive findings are recalculated.
 - **REVIEWER:** the reviewer label must differ from the revision author. Labels are entered by an operator and are not verified identity or role separation.
 
 ## New Zealand

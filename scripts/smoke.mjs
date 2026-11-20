@@ -19,7 +19,7 @@ const reject=async(fn,re)=>{await assert.rejects(fn,re);checks++;};
 const actor={actor:'Test author'};const due='2099-01-01';
 const file=(name,text)=>{const f=path.join(temp,name);fs.writeFileSync(f,text);return f;};
 try{
- const first=await migrate(db);ok(first.ran.length===1,'Migration applied');ok((await migrate(db)).ran.length===0,'Migration idempotent');
+ const first=await migrate(db);ok(first.ran.length===2,'Migration applied');ok((await migrate(db)).ran.length===0,'Migration idempotent');
  await seed(db);await seed(db);ok((await run('documents')).length===3,'Seed idempotent');
  ok((await run('review-queue')).length===3);ok((await run('terms')).length===4);ok((await run('rules')).length===2);ok((await run('term-review')).length===2);
  ok((await run('compliance')).some(x=>x.rule==='CLAIM-EVIDENCE'));ok((await run('owner-workload')).length===2);
@@ -57,6 +57,9 @@ try{
  await run('record-claim','DOC-TEST',{actor:'Evidence reviewer',statement:'Measured turnaround improved',evidence:'Synthetic test study reference','valid-until':due});
  await run('approve','DOC-TEST',{actor:'Reviewer',note:'Checked evidence applicability'});
  ok((await run('release-check','DOC-TEST'))[0].ready);
+ await run('record-claim','DOC-TEST',{actor:'Evidence reviewer',statement:'reviewed trial',evidence:'Additional synthetic trial evidence','valid-until':due});
+ ok(!(await run('release-check','DOC-TEST'))[0].ready,'New claim evidence requires fresh approval');
+ await run('approve','DOC-TEST',{actor:'Reviewer',note:'Reviewed added evidence'});
  await run('set-review-date','DOC-TEST',{...actor,'review-due':'2020-01-01',note:'Test expiry'});
  ok(!(await run('release-check','DOC-TEST'))[0].ready,'Date expiry invalidates readiness');
  await run('set-review-date','DOC-TEST',{...actor,'review-due':due,note:'Review renewed'});

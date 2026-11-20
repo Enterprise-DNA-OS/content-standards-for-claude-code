@@ -54,7 +54,8 @@ export async function readiness(db,doc){
  // Re-evaluate date-sensitive rules even if the standards fingerprint has not changed.
  const findings=inspect(doc,st.snapshot);if(findings.length)reasons.push(`${findings.length} current standards finding(s)`);
  const gaps=await db.query('select rule,finding from v_compliance where id=$1',[doc.id]);reasons.push(...gaps.map(g=>`${g.rule}: ${g.finding}`));
- return {doc,scan:s,reasons,findings};
+ const evidence=await db.query('select id,statement,evidence,reviewer,valid_until from claims where revision_id=$1 order by id',[doc.revision_id]);
+ return {doc,scan:s,reasons,findings,evidence,evidence_hash:digest(evidence)};
 }
 async function log(db,actor,kind,note,document=null,payload={}){await db.query('insert into events(document_id,kind,actor,note,payload) values($1,$2,$3,$4,$5)',[document,kind,actor,note,JSON.stringify(payload)]);}
 const reads={
@@ -110,7 +111,7 @@ export async function execute(db,args=[],f={}){
  }
  if(cmd==='release-check'||cmd==='attention'){
   const docs=value?[await current(db,value)]:await db.query('select * from v_current order by code');const result=[];
-  for(const d of docs){const rr=await readiness(db,d);const approvals=rr.scan?await db.query('select reviewer from approvals where revision_id=$1 and scan_id=$2',[d.revision_id,rr.scan.id]):[];const reasons=[...rr.reasons];if(!approvals.length)reasons.push('No approval for current check');
+  for(const d of docs){const rr=await readiness(db,d);const approvals=rr.scan?await db.query('select reviewer from approvals where revision_id=$1 and scan_id=$2 and evidence_hash=$3',[d.revision_id,rr.scan.id,rr.evidence_hash]):[];const reasons=[...rr.reasons];if(!approvals.length)reasons.push('No approval for current check');
    if(cmd==='release-check'||reasons.length)result.push({code:d.code,title:d.title,owner:d.owner,version:d.version,ready:!reasons.length,reasons:reasons.join('; ')});
   }return result;
  }
@@ -156,7 +157,7 @@ export async function execute(db,args=[],f={}){
    }else if(cmd==='check-content')result=await scan(db,d,actor);
    else if(cmd==='approve'){
     if(d.actor.trim().toLowerCase()===actor.toLowerCase())throw Error('Reviewer must differ from revision author');const rr=await readiness(db,d);if(rr.reasons.length)throw Error(`Approval blocked: ${rr.reasons.join('; ')}`);
-    result=(await db.query('insert into approvals(revision_id,scan_id,reviewer,note) values($1,$2,$3,$4) returning id,reviewer',[d.revision_id,rr.scan.id,actor,req(f,'note')]))[0];
+    result=(await db.query('insert into approvals(revision_id,scan_id,reviewer,note,evidence_hash,evidence_snapshot) values($1,$2,$3,$4,$5,$6) returning id,reviewer',[d.revision_id,rr.scan.id,actor,req(f,'note'),rr.evidence_hash,JSON.stringify(rr.evidence)]))[0];
    }else if(cmd==='log')result={code:d.code,note:req(f,'note')};
    else throw Error('Unsupported operation');
    await log(db,actor,cmd,f.note||cmd,d.id,result);

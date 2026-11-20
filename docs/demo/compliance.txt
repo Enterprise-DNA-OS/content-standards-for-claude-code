@@ -1,0 +1,5 @@
+  code     rule               finding                                         
+  -------  -----------------  ------------------------------------------------
+  DOC-001  CLAIM-DECLARATION  Current revision has no claim review declaration
+  DOC-001  REVIEW-DUE         Content review date passed                      
+  DOC-003  CLAIM-EVIDENCE     Evidence missing, expired or reviewer missing

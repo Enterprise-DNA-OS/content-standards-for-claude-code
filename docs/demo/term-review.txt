@@ -1,0 +1,4 @@
+  code      term              language  domain   status      owner           review_due  reason              
+  --------  ----------------  --------  -------  ----------  --------------  ----------  --------------------
+  TERM-003  green             en        general  proposed    Product editor  2026-11-15  term decision needed
+  TERM-004  fully guaranteed  en        general  deprecated  Product editor  2026-11-18  term review overdue
